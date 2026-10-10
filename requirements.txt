@@ -1,0 +1,5 @@
+# Optional Local GGUF Inference (~100MB SmolLM-135M)
+llama-cpp-python>=0.2.80
+
+# Configuration
+pyyaml>=6.0.1

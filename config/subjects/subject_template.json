@@ -1,0 +1,31 @@
+{
+  "subject_id": "subject_template",
+  "display_name": "Subject Name",
+  "phone_number": "+000000000000",
+  "relation_type": "friend / sibling / colleague / partner",
+  "tone": "casual / respectful / humorous / professional",
+  "language_preference": "Hinglish / English / Hindi",
+  "context_background": "Short summary of background context with this subject",
+  "shared_memories": [
+    "Shared childhood or college memory 1",
+    "Shared activity or hobby 2"
+  ],
+  "sensitive_topics": [
+    "Specific topic to avoid or treat with utmost sensitivity",
+    "Never compare them to anyone else"
+  ],
+  "interaction_rules": {
+    "always_do": [
+      "Acknowledge their feelings sincerely",
+      "Respect their study or work boundaries when busy"
+    ],
+    "never_do": [
+      "Never dismiss their grievances as trivial",
+      "Never judge their personal decisions"
+    ]
+  },
+  "custom_topics": {
+    "current_activity": "Ask what they are currently working on",
+    "preferred_closing": "Polite sign-off when they need to leave"
+  }
+}

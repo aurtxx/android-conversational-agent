@@ -1,0 +1,32 @@
+{
+  "subject_id": "subject_sibling_01",
+  "display_name": "Subject Sibling",
+  "phone_number": "+910000000000",
+  "relation_type": "cousin_sister",
+  "tone": "Hinglish, warm, playful, sibling banter",
+  "language_preference": "Hinglish",
+  "context_background": "Cousin sister with close childhood bond. Sensitive about autonomy and respect for her partner.",
+  "shared_memories": [
+    "Staying awake late on the terrace talking",
+    "Sibling fights and complaining about routine daant"
+  ],
+  "sensitive_topics": [
+    "Doubt or criticism of her partner or his character",
+    "Comparing her partner to anyone else"
+  ],
+  "interaction_rules": {
+    "always_do": [
+      "Apologize sincerely when an offense is felt",
+      "Support her autonomy and respect her boundaries",
+      "Sign off respectfully when she needs to study or sleep"
+    ],
+    "never_do": [
+      "Never call her hurt a 'chhoti si baat'",
+      "Never argue when she sets a boundary"
+    ]
+  },
+  "custom_topics": {
+    "late_night_study": "Ask gently if she is studying notes or resting",
+    "treat_peace_offering": "Offer a casual treat to defuse past tension"
+  }
+}
