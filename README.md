@@ -101,17 +101,33 @@ python run.py --profile config/subjects/my_subject.json --dry-run
 
 ## 🧠 Local ~100MB Model Setup (Optional)
 
-To enable offline neural generation using the lightweight **~92MB SmolLM-135M** model:
+To enable offline neural generation using the lightweight **~100MB SmolLM2-135M** model:
 
 ```bash
-# 1. Automatically download the ~92MB model into models/
+# 1. Automatically download the ~100MB model into models/
 python run.py --download-model
 
 # 2. Install llama-cpp-python
-pip install llama-cpp-python
+pip install llama-cpp-python --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
 ```
 
 *Note: If no GGUF model is present, the agent automatically falls back to its zero-latency built-in High-EQ Contextual Neural Brain.*
+
+---
+
+## 🧪 Simulation & Audio Speech Synthesis
+
+### 1. Dual-Agent 5-Minute Simulation Test
+Run a safe, continuous side-by-side benchmark test between two virtual agents directly in an opened WhatsApp chat (e.g. *Message yourself*):
+```bash
+python test_dual_simulation.py
+```
+
+### 2. Multi-Speaker Audio Synthesis (gTTS)
+Synthesize multi-turn conversations into a single audio file with character-specific pitch/tempo modulations:
+```bash
+python build_audio_conversation.py
+```
 
 ---
 

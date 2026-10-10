@@ -18,6 +18,8 @@ window_dump.xml
 bot_debug.log
 latest_reply.json
 conversation_log.jsonl
+audio_output/
+*.mp3
 
 # Antigravity & IDE
 .agent/

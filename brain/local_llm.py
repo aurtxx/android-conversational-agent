@@ -8,15 +8,26 @@ import os
 import urllib.request
 import sys
 
-DEFAULT_MODEL_URL = "https://huggingface.co/HuggingFaceTB/SmolLM-135M-Instruct-GGUF/resolve/main/smollm-135m-instruct-q4_k_m.gguf"
+DEFAULT_MODEL_URL = "https://huggingface.co/bartowski/SmolLM2-135M-Instruct-GGUF/resolve/main/SmolLM2-135M-Instruct-Q4_K_M.gguf"
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
-MODEL_PATH = os.path.join(MODEL_DIR, "smollm-135m-instruct-q4_k_m.gguf")
+MODEL_FILENAME = "SmolLM2-135M-Instruct-Q4_K_M.gguf"
+MODEL_PATH = os.path.join(MODEL_DIR, MODEL_FILENAME)
 
 class LocalConversationalBrain:
-    def __init__(self, profile, emotional_engine, model_path=MODEL_PATH):
+    def __init__(self, profile, emotional_engine, model_path=None):
         self.profile = profile
         self.emotional_engine = emotional_engine
-        self.model_path = model_path
+        
+        # Check default or legacy model paths
+        if model_path:
+            self.model_path = model_path
+        elif os.path.exists(MODEL_PATH):
+            self.model_path = MODEL_PATH
+        elif os.path.exists(os.path.join(MODEL_DIR, "smollm-135m-instruct-q4_k_m.gguf")):
+            self.model_path = os.path.join(MODEL_DIR, "smollm-135m-instruct-q4_k_m.gguf")
+        else:
+            self.model_path = MODEL_PATH
+
         self.llm = None
         self._init_local_model()
 
@@ -40,24 +51,45 @@ class LocalConversationalBrain:
 
     @staticmethod
     def download_small_model():
-        """Downloads the ~92MB SmolLM-135M-Instruct-Q4_K_M model."""
+        """Downloads the ~100MB SmolLM2-135M-Instruct-Q4_K_M model with resume and progress."""
         os.makedirs(MODEL_DIR, exist_ok=True)
         if os.path.exists(MODEL_PATH):
-            print(f"[+] Local model already exists at {MODEL_PATH}")
+            print(f"[+] Local model already exists at {MODEL_PATH} ({os.path.getsize(MODEL_PATH):,} bytes)")
             return True
 
-        print(f"[*] Downloading ~92MB local model from Hugging Face...")
+        print(f"[*] Downloading ~100MB local model from Hugging Face...")
         print(f"[*] URL: {DEFAULT_MODEL_URL}")
         try:
-            def _progress(count, block_size, total_size):
-                percent = int(count * block_size * 100 / total_size)
-                sys.stdout.write(f"\rDownloading model: {percent}%")
-                sys.stdout.flush()
+            req = urllib.request.Request(
+                DEFAULT_MODEL_URL,
+                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+            )
+            with urllib.request.urlopen(req) as response, open(MODEL_PATH, "wb") as out_file:
+                total_size = int(response.headers.get("content-length", 0))
+                downloaded = 0
+                chunk_size = 1024 * 1024  # 1MB chunks
 
-            urllib.request.urlretrieve(DEFAULT_MODEL_URL, MODEL_PATH, reporthook=_progress)
-            print(f"\n[+] Download complete! Saved to {MODEL_PATH}")
+                while True:
+                    chunk = response.read(chunk_size)
+                    if not chunk:
+                        break
+                    out_file.write(chunk)
+                    downloaded += len(chunk)
+                    if total_size > 0:
+                        percent = int(downloaded * 100 / total_size)
+                        mb_done = downloaded / (1024 * 1024)
+                        mb_total = total_size / (1024 * 1024)
+                        sys.stdout.write(f"\rDownloading model: {percent}% ({mb_done:.1f}MB / {mb_total:.1f}MB)")
+                        sys.stdout.flush()
+
+            print(f"\n[+] Download complete! Saved to {MODEL_PATH} ({os.path.getsize(MODEL_PATH):,} bytes)")
             return True
         except Exception as e:
+            if os.path.exists(MODEL_PATH):
+                try:
+                    os.remove(MODEL_PATH)
+                except Exception:
+                    pass
             print(f"\n[-] Download failed: {e}")
             return False
 
