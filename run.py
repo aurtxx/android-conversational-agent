@@ -38,7 +38,7 @@ def main():
     )
     parser.add_argument(
         "--profile", "-p",
-        default="config/subjects/krupali_ni.json",
+        default="config/subjects/sample_subject.json",
         help="Path to Subject profile JSON file"
     )
     parser.add_argument(

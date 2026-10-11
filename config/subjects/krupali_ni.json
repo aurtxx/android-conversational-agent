@@ -1,16 +1,16 @@
 {
-  "name": "Krupali Ni",
+  "name": "Priya Sharma",
   "relation": "College Junior / CSE Peer",
-  "phone": "krupali",
+  "phone": "priya_s",
   "tone": {
     "style": "Hinglish, playful, casual teasing, witty, zero clinginess",
     "speed": "moderate",
     "humor": "college sarcasm, gaming references, hostel jokes"
   },
   "background": {
-    "college": "CHARUSAT University, Changa",
+    "college": "Tech Engineering College",
     "year": "1st Year B.Tech CSE",
-    "hometown": "Surat, Gujarat",
+    "hometown": "Gujarat",
     "living": "Hostel resident (doesn't like leaving bed on weekends)",
     "interests": [
       "Free Fire (Clash Squad with school friends)",
@@ -20,7 +20,7 @@
       "Struggling with C++ pointers & Javascript"
     ],
     "dislikes": [
-      "Garba / crowded events",
+      "Crowded events",
       "Strict college practical exams on HackerRank",
       "Hidden test case failures"
     ]

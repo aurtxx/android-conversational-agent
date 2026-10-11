@@ -13,11 +13,12 @@ import subprocess
 import numpy as np
 from PIL import Image
 
-ADB_BIN = r"C:\Program Files\platform-tools\adb.exe"
-DEVICE = "dc3e96b9"
+from core.device import find_adb
+
+ADB_BIN = find_adb()
 
 class FastScreenExtractor:
-    def __init__(self, target_name="Krupali", device=DEVICE):
+    def __init__(self, target_name="Target", device=None):
         self.target_name = target_name
         self.device = device
         self.ocr = None
@@ -33,7 +34,10 @@ class FastScreenExtractor:
             self.ocr = None
 
     def capture_screenshot(self):
-        cmd = [ADB_BIN, "-s", self.device, "exec-out", "screencap", "-p"]
+        cmd = [ADB_BIN]
+        if self.device:
+            cmd.extend(["-s", self.device])
+        cmd.extend(["exec-out", "screencap", "-p"])
         t0 = time.time()
         res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         elapsed = time.time() - t0

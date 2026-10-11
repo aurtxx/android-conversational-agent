@@ -16,7 +16,7 @@ class TestProfileLoader(unittest.TestCase):
     def test_load_krupali_profile(self):
         path = os.path.join("config", "subjects", "krupali_ni.json")
         prof = SubjectProfile(path)
-        self.assertEqual(prof.name, "Krupali Ni")
+        self.assertEqual(prof.name, "Priya Sharma")
         self.assertIn("Hinglish", str(prof.tone))
 
 if __name__ == "__main__":

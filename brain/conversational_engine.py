@@ -11,7 +11,7 @@ import re
 import random
 
 class ConversationalEngine:
-    def __init__(self, target_name="Krupali", profile=None):
+    def __init__(self, target_name="Target", profile=None):
         self.target_name = target_name
         self.profile = profile
         self.asked_topics = set()
@@ -152,9 +152,9 @@ class ConversationalEngine:
 
         # 7. Dynamic Fresh Topic Pool (Guaranteed Zero Repetition)
         fallback_pool = [
-            ("campus_exploration", "Waise CHARUSAT ka campus kaisa lag raha hai? Bohot bada hai bolte hain, classes ke beech me chal chal ke cardio ho jata hoga haha?"),
+            ("campus_exploration", "Waise college campus kaisa lag raha hai? Bohot bada hai bolte hain, classes ke beech me chal chal ke cardio ho jata hoga haha?"),
             ("music_taste", "Waise gaming ke time background me music sunna pasand hai ya squad ka voice chat hi chal raha hota hai?"),
-            ("fest_discussion", "College me Spoural ya annual sports fest kab hota hai CHARUSAT me? Participate karne ka plan hai ya bas audience me enjoy?"),
+            ("fest_discussion", "College me annual sports fest kab hota hai? Participate karne ka plan hai ya bas audience me enjoy?"),
             ("night_owl", "Waise tum morning person ho ya proper night owl jo 3-4 baje sota hai?"),
             ("food_craving", "Hostel me aadhi raat ko sabse zyada kis cheez ki craving hoti hai? Maggie ya kuch spicy junk food?")
         ]

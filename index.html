@@ -831,10 +831,10 @@
         <div class="phone-speaker"></div>
         <div class="phone-screen">
           <div class="wa-header">
-            <div class="wa-avatar">K</div>
+            <div class="wa-avatar">P</div>
             <div class="wa-info">
-              <div class="wa-name">Krupali Ni</div>
-              <div class="wa-status">online (CHARUSAT CSE)</div>
+              <div class="wa-name">Priya S.</div>
+              <div class="wa-status">online (Computer Science)</div>
             </div>
             <div style="font-size: 14px; opacity: 0.6;">⋮</div>
           </div>
@@ -917,7 +917,7 @@
               <span class="term-dot" style="background: #22c55e;"></span>
             </div>
             <span class="term-title">adb-conversational-daemon.log [LIVE STREAM]</span>
-            <span style="font-size: 0.65rem; color: #64748b;">OPPO CPH1801 (Android 7.1.1)</span>
+            <span style="font-size: 0.65rem; color: #64748b;">Android Device (Hardware Debugging)</span>
           </div>
           <div id="term-logs" class="term-logs">
             <!-- Dynamic Telemetry Logs inserted here -->
@@ -1000,7 +1000,7 @@
       {
         incoming: "Gujarat se hi",
         topic: "LOCATION_GUJARAT",
-        reply: "Arre sahi hai! Gujarat me konsi city se waise? Ahmedabad, Surat ya Vadodara? Aur CHARUSAT me hostel me rehti ho ya weekend pe ghar bhagti ho haha?",
+        reply: "Arre sahi hai! Gujarat me konsi city se waise? Ahmedabad, Surat ya Vadodara? Aur hostel me rehti ho ya weekend pe ghar bhagti ho haha?",
         turn: "6/50"
       },
       {
@@ -1097,7 +1097,7 @@
       // 2. Boundary Verification
       await sleep(600);
       setStep(2);
-      log("GUARD", `Boundary bounds x2=145 < 620 -> Verified INCOMING from Krupali Ni`, "tag-guard");
+      log("GUARD", `Boundary bounds x2=145 < 620 -> Verified INCOMING from Priya S.`, "tag-guard");
 
       // 3. Neural Brain Reasoning
       await sleep(700);
@@ -1176,13 +1176,13 @@
     });
 
     document.getElementById("copy-btn").addEventListener("click", function() {
-      navigator.clipboard.writeText("python run.py --mode autonomous --profile config/subjects/krupali_ni.json --turns 50");
+      navigator.clipboard.writeText("python run.py --mode autonomous --profile config/subjects/sample_subject.json --turns 50");
       this.innerText = "Copied!";
       setTimeout(() => this.innerText = "Copy", 2000);
     });
 
     // Initial setup
-    log("SYS", "Device attached: OPPO CPH1801 (dc3e96b9, Android 7.1.1)", "tag-adb");
+    log("SYS", "Device attached: Android Device (Physical Hardware via ADB)", "tag-adb");
     log("SYS", "Safe Keyboard Guard initialized: Active", "tag-guard");
     log("SYS", "SmolLM2-135M Neural Brain weights loaded (92MB Q4_K_M)", "tag-ai");
     loop();

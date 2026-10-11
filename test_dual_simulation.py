@@ -18,7 +18,10 @@ if sys.stdout.encoding.lower() != "utf-8":
     except Exception:
         pass
 
-SERIAL = "dc3e96b9"
+from core.device import find_adb
+
+ADB_BIN = find_adb()
+SERIAL = None
 
 CONVERSATION_TURNS = [
     {
@@ -84,7 +87,10 @@ CONVERSATION_TURNS = [
 ]
 
 def run_adb(args, timeout=15):
-    cmd = ["adb", "-s", SERIAL] + args
+    cmd = [ADB_BIN]
+    if SERIAL:
+        cmd.extend(["-s", SERIAL])
+    cmd.extend(args)
     res = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
     return res.stdout.strip()
 

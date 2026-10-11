@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Dual WhatsApp Agent Runner (CLI Entrypoint).
-Orchestrates concurrent conversations for both Krupali Ni and Nitu Kesar
+Orchestrates concurrent conversations for both Target A and Target B
 with 0% cross-talk risk and strict target contact verification.
 """
 

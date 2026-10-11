@@ -8,7 +8,7 @@ from brain.conversational_engine import ConversationalEngine
 
 class TestConversationalEngine(unittest.TestCase):
     def setUp(self):
-        self.engine = ConversationalEngine("Krupali")
+        self.engine = ConversationalEngine("Target")
 
     def test_city_recognition(self):
         reply = self.engine.generate_reply("Gujarat se hi, Surat")

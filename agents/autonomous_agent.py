@@ -13,7 +13,7 @@ from brain.conversational_engine import ConversationalEngine
 from brain.memory_manager import SmolMemoryManager
 
 class AutonomousAgent:
-    def __init__(self, target_name="Krupali", target_turns=50, poll_interval=3.5, device_serial=None):
+    def __init__(self, target_name="Target", target_turns=50, poll_interval=3.5, device_serial=None):
         self.target_name = target_name
         self.target_turns = target_turns
         self.poll_interval = poll_interval

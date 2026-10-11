@@ -1,9 +1,9 @@
 """
-Krupali Conversational Assistant.
+Conversational Assistant.
 Integrates:
 1. Fast OCR sub-second screen extraction (RapidOCR)
 2. SmolLM2 Local Memory Manager (SmolLM2-135M)
-3. Semi-autonomous / interactive execution loop for Krupali Ni.
+3. Semi-autonomous / interactive execution loop.
 """
 
 import os
@@ -19,10 +19,12 @@ if sys.stdout.encoding.lower() != "utf-8":
     except Exception:
         pass
 
-ADB_BIN = r"C:\Program Files\platform-tools\adb.exe"
-DEVICE = "dc3e96b9"
+from core.device import find_adb
 
-OPENER_MESSAGE = "Hey Krupali, thoda time hai kya casual baat karne ka? Kuch interesting puchna tha actually"
+ADB_BIN = find_adb()
+DEVICE = None
+
+OPENER_MESSAGE = "Hey, thoda time hai kya casual baat karne ka? Kuch interesting puchna tha actually"
 CHOICE_C_MESSAGE = "Bas ye confirm karna tha: 1st year me aake Google/Microsoft phodne ka josh bacha hai ya already mann bana liya hai ki 'bhai bas pass karwa do'? Haha"
 
 def send_whatsapp_text(message):

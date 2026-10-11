@@ -1,5 +1,5 @@
 """
-Dedicated Autonomous Agent for Krupali Ni.
+Dedicated Autonomous Agent Runner.
 Executes the continuous conversational loop with college & gaming persona tuning.
 """
 

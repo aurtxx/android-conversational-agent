@@ -1,6 +1,6 @@
 """
 Dual WhatsApp Agent Orchestrator.
-Manages concurrent, independent conversations with multiple targets (e.g., Krupali Ni and Nitu Kesar)
+Manages concurrent, independent conversations with multiple targets (e.g., Target A and Target B)
 with strict target verification to eliminate 0% cross-talk risk.
 """
 
@@ -10,15 +10,15 @@ from core.whatsapp import WhatsAppController
 from brain.conversational_engine import ConversationalEngine
 
 TARGETS = {
-    "krupali": {
-        "display": "Krupali Ni",
-        "search_key": "krupali",
+    "target_a": {
+        "display": "Priya Sharma",
+        "search_key": "priya",
         "tap_pos": (195, 230),
         "target_turns": 50
     },
-    "keser": {
-        "display": "Nitu Kesar",
-        "phone": "+919661003469",
+    "target_b": {
+        "display": "Neha Sharma",
+        "phone": "+919876543210",
         "target_turns": 50
     }
 }
@@ -35,33 +35,33 @@ class DualAgentOrchestrator:
         self.whatsapp = WhatsAppController(self.device_mgr)
         return True
 
-    def poll_krupali(self):
-        self.whatsapp.open_chat_by_search("krupali", tap_pos=TARGETS["krupali"]["tap_pos"])
+    def poll_target_a(self):
+        self.whatsapp.open_chat_by_search(TARGETS["target_a"]["search_key"], tap_pos=TARGETS["target_a"]["tap_pos"])
         history = self.whatsapp.get_chat_history()
         msgs = history["messages"]
         if msgs and msgs[-1]["is_incoming"]:
             incoming_text = msgs[-1]["text"]
-            print(f"[🚨 Krupali Reply]: '{incoming_text}'")
+            print(f"[🚨 Target A Reply]: '{incoming_text}'")
             reply = self.krupali_engine.generate_reply(incoming_text, msgs)
             self.whatsapp.send_message(reply)
 
-    def poll_keser(self):
-        self.whatsapp.open_chat_by_phone(TARGETS["keser"]["phone"])
+    def poll_target_b(self):
+        self.whatsapp.open_chat_by_phone(TARGETS["target_b"]["phone"])
         history = self.whatsapp.get_chat_history()
         msgs = history["messages"]
         if msgs and msgs[-1]["is_incoming"]:
             incoming_text = msgs[-1]["text"]
-            print(f"[🚨 Keser Reply]: '{incoming_text}'")
+            print(f"[🚨 Target B Reply]: '{incoming_text}'")
             # Casual response
             reply = "Haha sahi baat hai! Aur batao ghar pe sab theek? Padhai kaisi chal rahi hai?"
             self.whatsapp.send_message(reply)
 
     def run_cycle(self):
-        print("\n[*] Polling Krupali...")
-        self.poll_krupali()
+        print("\n[*] Polling Target A...")
+        self.poll_target_a()
         time.sleep(2)
-        print("\n[*] Polling Keser...")
-        self.poll_keser()
+        print("\n[*] Polling Target B...")
+        self.poll_target_b()
         time.sleep(2)
 
 if __name__ == "__main__":

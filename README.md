@@ -20,7 +20,7 @@
 - **⚡ Sub-Second Screen Parsing**: Hybrid perception engine supporting both Android UIAutomator XML and sub-second on-device screen OCR via `RapidOCR`.
 - **🎯 Dynamic Bubble Direction Detection**: Distinguishes incoming vs outgoing bubbles accurately based on chat bounds (`x2 < 620` incoming vs `x2 >= 620` outgoing), eliminating false positives from input boxes or system chips.
 - **🧠 High-EQ Hinglish Conversational Engine**: Context-aware dialogue reasoning with dynamic topic tracking and an **anti-repetition state machine** to ensure engaging, natural banter without looping.
-- **👥 Dual-Agent Multi-Contact Orchestrator**: Manages concurrent, isolated conversations across multiple contacts (e.g., Krupali Ni & Nitu Kesar) with strict contact verification and **0% cross-talk risk**.
+- **👥 Dual-Agent Multi-Contact Orchestrator**: Manages concurrent, isolated conversations across multiple contacts (e.g., Target A & Target B) with strict contact verification and **0% cross-talk risk**.
 - **🎙️ Multi-Speaker Audio Synthesis**: Generates full vocal conversations with custom pitch and tempo modulation via `gTTS` and `ffmpeg`.
 
 ---
@@ -49,7 +49,7 @@ android-conversational-agent/
 ├── agents/                              # High-level autonomous agent runners
 │   ├── __init__.py
 │   ├── autonomous_agent.py              # Generic continuous conversation agent
-│   ├── krupali_agent.py                 # Profile-specific runner for Krupali Ni
+│   ├── krupali_agent.py                 # Profile-specific runner example
 │   └── dual_agent_orchestrator.py       # Multi-contact orchestrator with zero cross-talk
 │
 ├── audio/                               # Audio conversation & TTS engine
@@ -58,8 +58,8 @@ android-conversational-agent/
 │
 ├── config/                              # Configuration & Subject profiles
 │   ├── subjects/
-│   │   ├── krupali_ni.json              # Krupali subject profile (college, gaming, persona)
-│   │   ├── nitu_kesar.json              # Nitu Kesar subject profile
+│   │   ├── krupali_ni.json              # Collegiate sample profile (college, gaming, persona)
+│   │   ├── nitu_kesar.json              # Family sample profile (referrals, catch-up)
 │   │   ├── sample_subject.json
 │   │   └── subject_template.json
 │
@@ -97,11 +97,11 @@ pip install -r requirements.txt
 ### 1. Autonomous Conversation Mode (Default)
 Runs hands-free continuous monitoring with auto-reply generation, turn counting, and safe keyboard dismissal:
 ```bash
-# Run for Krupali Ni with a target of 50 turns
-python run.py --mode autonomous --profile config/subjects/krupali_ni.json --turns 50
+# Run autonomous mode with a target of 50 turns
+python run.py --mode autonomous --profile config/subjects/sample_subject.json --turns 50
 
 # With live desktop screen mirror
-python run.py --mode autonomous --profile config/subjects/krupali_ni.json --mirror
+python run.py --mode autonomous --profile config/subjects/sample_subject.json --mirror
 ```
 
 ### 2. Dual-Agent Multi-Contact Orchestrator

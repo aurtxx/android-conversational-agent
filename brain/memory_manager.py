@@ -12,7 +12,7 @@ from llama_cpp import Llama
 MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "SmolLM2-135M-Instruct-Q4_K_M.gguf")
 
 class SmolMemoryManager:
-    def __init__(self, target_name="Krupali"):
+    def __init__(self, target_name="Target"):
         self.target_name = target_name
         self.history = []
         self.llm = None
@@ -88,14 +88,12 @@ Label:<|im_end|>
             return {"intent": "AFFIRMATIVE"}
 
 if __name__ == "__main__":
-    mgr = SmolMemoryManager("Krupali")
+    mgr = SmolMemoryManager("Target")
     sample = [
-        {"sender": "You", "text": "Wo insta band kardiya to msg yaha kar len"},
-        {"sender": "Krupali", "text": "Krupali"},
-        {"sender": "You", "text": "Sahi ha"},
-        {"sender": "Krupali", "text": "Kar diya"},
-        {"sender": "You", "text": "Kuch jayada hi fast kardiya yar Thx"},
-        {"sender": "Krupali", "text": "Welcome"}
+        {"sender": "You", "text": "Hey, did you get the project notes?"},
+        {"sender": "Target", "text": "Yes, just checked them!"},
+        {"sender": "You", "text": "Awesome, thanks!"},
+        {"sender": "Target", "text": "Welcome anytime."}
     ]
     added = mgr.arrange_and_update(sample)
     print(f"Loaded {len(added)} memory turns.")
