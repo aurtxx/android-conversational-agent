@@ -19,19 +19,19 @@ class SubjectProfile:
 
     @property
     def id(self):
-        return self.data.get("subject_id", "subject_default")
+        return self.data.get("subject_id") or self.data.get("id", "subject_default")
 
     @property
     def name(self):
-        return self.data.get("display_name", "Subject")
+        return self.data.get("display_name") or self.data.get("name", "Subject")
 
     @property
     def phone(self):
-        return self.data.get("phone_number", "")
+        return self.data.get("phone_number") or self.data.get("phone", "")
 
     @property
     def relation(self):
-        return self.data.get("relation_type", "friend")
+        return self.data.get("relation_type") or self.data.get("relation", "friend")
 
     @property
     def tone(self):
@@ -47,7 +47,7 @@ class SubjectProfile:
 
     @property
     def rules(self):
-        return self.data.get("interaction_rules", {"always_do": [], "never_do": []})
+        return self.data.get("interaction_rules") or self.data.get("rules", {"always_do": [], "never_do": []})
 
     def get_system_prompt_context(self):
         """Constructs rich relationship prompt for the conversational brain."""
