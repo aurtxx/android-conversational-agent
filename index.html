@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Android Conversational Agent | Autonomous AI for Real Android Devices</title>
+  <meta name="description" content="Autonomous High-EQ conversational system for real Android devices via ADB & scrcpy. Zero-latency perception, local neural reasoning, and soft-keyboard guardrails.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --bg-card: rgba(18, 24, 38, 0.7);
+      --bg-card-hover: rgba(26, 34, 52, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(99, 102, 241, 0.4);
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --accent: #06b6d4;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      selection-background-color: var(--primary);
+    }
+
+    /* Background Ambient Gradients */
+    .ambient-glow {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 50% 10%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 10% 40%, rgba(6, 182, 212, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 90% 70%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navbar */
+    header {
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(9, 13, 22, 0.8);
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      color: #fff;
+      text-decoration: none;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover {
+      color: #fff;
+    }
+    .btn-github {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-github:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 70px 0 50px;
+      text-align: center;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: var(--primary-light);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+    }
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #fff 30%, var(--primary-light) 70%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #4f46e5);
+      color: #fff;
+      padding: 13px 26px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+      transition: all 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.55);
+    }
+    .btn-secondary {
+      background: var(--bg-card);
+      color: #fff;
+      padding: 13px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Live Animated SaaS Preview Section */
+    .preview-section {
+      margin: 60px 0 90px;
+    }
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .preview-title-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .live-chip {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--emerald);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .preview-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .control-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .control-btn.active {
+      background: var(--primary);
+      border-color: var(--primary-light);
+    }
+
+    /* The Main SaaS Stage */
+    .saas-stage {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+      background: rgba(13, 19, 33, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(99, 102, 241, 0.08);
+      position: relative;
+    }
+
+    /* Device Mockup (Left) */
+    .phone-mockup {
+      background: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 36px;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.05);
+      position: relative;
+      height: 590px;
+    }
+    .phone-speaker {
+      width: 60px;
+      height: 5px;
+      background: #334155;
+      border-radius: 4px;
+      margin: 0 auto 10px;
+    }
+    .phone-screen {
+      background: #0b141a;
+      border-radius: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    /* WhatsApp UI Inside Phone */
+    .wa-header {
+      background: #1f2c34;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .wa-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f43f5e, #fb923c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      color: #fff;
+    }
+    .wa-info {
+      flex: 1;
+    }
+    .wa-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #e9edef;
+    }
+    .wa-status {
+      font-size: 0.7rem;
+      color: #00a884;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .wa-status::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #00a884;
+    }
+
+    .wa-chat-area {
+      flex: 1;
+      padding: 14px 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+
+    .bubble {
+      max-width: 82%;
+      padding: 8px 12px;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      border-radius: 10px;
+      position: relative;
+      word-break: break-word;
+      animation: messagePop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes messagePop {
+      0% { opacity: 0; transform: translateY(8px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .bubble.incoming {
+      align-self: flex-start;
+      background: #202c33;
+      color: #e9edef;
+      border-top-left-radius: 2px;
+    }
+    .bubble.outgoing {
+      align-self: flex-end;
+      background: #005c4b;
+      color: #e9edef;
+      border-top-right-radius: 2px;
+    }
+    .bubble-meta {
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .wa-input-dock {
+      padding: 8px 10px;
+      background: #1f2c34;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .wa-input-box {
+      background: #2a3942;
+      border-radius: 20px;
+      padding: 7px 12px;
+      font-size: 0.78rem;
+      color: #8696a0;
+      flex: 1;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .wa-input-box.typing {
+      border-color: #00a884;
+      color: #fff;
+    }
+    .wa-send-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #00a884;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0, 168, 132, 0.4);
+    }
+
+    /* Soft Keyboard Animation Mock */
+    .keyboard-pop {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 140px;
+      background: #202c33;
+      border-top: 1px solid #374248;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transform: translateY(100%);
+      transition: transform 0.25s ease-out;
+      z-index: 10;
+    }
+    .keyboard-pop.active {
+      transform: translateY(0);
+    }
+    .kb-banner {
+      font-size: 0.7rem;
+      color: #8696a0;
+      font-family: var(--font-mono);
+    }
+    .kb-guard-badge {
+      background: rgba(244, 63, 94, 0.2);
+      border: 1px solid var(--rose);
+      color: #fda4af;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+
+    /* SaaS Telemetry Dashboard (Right) */
+    .saas-telemetry {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Stat Cards Row */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .stat-value {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: var(--font-mono);
+    }
+
+    /* Pipeline Step Tracker */
+    .pipeline-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .pipeline-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .pipeline-steps {
+      display: flex;
+      gap: 8px;
+    }
+    .p-step {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.72rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .p-step.active {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+    }
+    .p-step-num {
+      font-family: var(--font-mono);
+      color: var(--primary-light);
+      font-weight: 700;
+    }
+    .p-step-name {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Live Telemetry Terminal */
+    .terminal-card {
+      flex: 1;
+      background: #06090e;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 220px;
+    }
+    .term-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .term-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .term-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .term-title {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .term-logs {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .log-line {
+      line-height: 1.5;
+      display: flex;
+      gap: 8px;
+    }
+    .log-time {
+      color: #475569;
+    }
+    .log-tag {
+      font-weight: 700;
+      border-radius: 3px;
+      padding: 0 4px;
+    }
+    .tag-ocr { background: rgba(6, 182, 212, 0.15); color: var(--accent); }
+    .tag-ai { background: rgba(99, 102, 241, 0.15); color: var(--primary-light); }
+    .tag-adb { background: rgba(16, 185, 129, 0.15); color: var(--emerald); }
+    .tag-guard { background: rgba(244, 63, 94, 0.15); color: var(--rose); }
+
+    /* Features Grid */
+    .features-section {
+      padding: 60px 0;
+    }
+    .section-head {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section-head h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .section-head p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      transition: all 0.2s;
+    }
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-3px);
+    }
+    .feat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* CLI Quickstart Banner */
+    .cli-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 40px;
+      margin: 40px 0 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .cli-content h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .cli-content p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .cli-box {
+      background: #050811;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover {
+      background: var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .saas-stage {
+        grid-template-columns: 1fr;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .phone-mockup {
+        max-width: 340px;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-glow"></div>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container nav">
+      <a href="#" class="logo">
+        <div class="logo-badge">🤖</div>
+        <span>Android Agent</span>
+      </a>
+      <div class="nav-links">
+        <a href="#demo">Live Demo</a>
+        <a href="#features">Architecture</a>
+        <a href="#quickstart">Quickstart</a>
+        <a href="https://github.com/aurtxx/android-conversational-agent" target="_blank" class="btn-github">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero container">
+    <div class="pill">
+      <span class="pill-dot"></span>
+      <span>v2.0 Autonomous Perception & Reasoning Engine</span>
+    </div>
+    <h1>
+      Autonomous <span class="gradient-text">High-EQ AI Agent</span><br>For Real Android Devices
+    </h1>
+    <p class="hero-sub">
+      Connects to physical Android phones via ADB & scrcpy. Operates continuous WhatsApp conversations with sub-second RapidOCR screen extraction, local neural memory, and soft-keyboard guardrails.
+    </p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn-primary">
+        <span>Watch Live Simulation ↓</span>
+      </a>
+      <a href="https://github.com/aurtxx/android-conversational-agent" target="_blank" class="btn-secondary">
+        <span>Explore GitHub Repo</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Animated SaaS Product Preview -->
+  <section id="demo" class="container preview-section">
+    <div class="preview-header">
+      <div class="preview-title-box">
+        <h2 style="font-size: 1.3rem; font-weight: 800;">Real-Time Execution Telemetry</h2>
+        <span class="live-chip">● ACTIVE RUNNER (50 TURNS)</span>
+      </div>
+      <div class="preview-controls">
+        <button id="toggle-sim" class="control-btn active">⏸ Pause Simulation</button>
+        <button id="step-sim" class="control-btn">⚡ Step Next Turn</button>
+        <button id="reset-sim" class="control-btn">↺ Reset Demo</button>
+      </div>
+    </div>
+
+    <div class="saas-stage">
+      <!-- Phone Mockup (Left) -->
+      <div class="phone-mockup">
+        <div class="phone-speaker"></div>
+        <div class="phone-screen">
+          <div class="wa-header">
+            <div class="wa-avatar">K</div>
+            <div class="wa-info">
+              <div class="wa-name">Krupali Ni</div>
+              <div class="wa-status">online (CHARUSAT CSE)</div>
+            </div>
+            <div style="font-size: 14px; opacity: 0.6;">⋮</div>
+          </div>
+
+          <div id="chat-stream" class="wa-chat-area">
+            <!-- Messages inserted dynamically via JavaScript -->
+          </div>
+
+          <div class="wa-input-dock">
+            <div id="input-box" class="wa-input-box">Message</div>
+            <div id="send-btn" class="wa-send-btn">➤</div>
+          </div>
+
+          <!-- Soft Keyboard Mockup -->
+          <div id="keyboard-guard" class="keyboard-pop">
+            <span class="kb-banner">ANDROID SOFT KEYBOARD DETECTED</span>
+            <div class="kb-guard-badge">🛡️ KEYBOARD GUARD: DISMISSED VIA KEYCODE_BACK</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SaaS Telemetry (Right) -->
+      <div class="saas-telemetry">
+        <!-- Stats Row -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Progress</span>
+            <span id="stat-turns" class="stat-value" style="color: var(--primary-light);">13/50</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Perception Latency</span>
+            <span class="stat-value" style="color: var(--accent);">0.32s</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Cross-Talk Risk</span>
+            <span class="stat-value" style="color: var(--emerald);">0.0%</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Local Neural Brain</span>
+            <span class="stat-value" style="color: var(--amber);">92MB</span>
+          </div>
+        </div>
+
+        <!-- Pipeline Step Tracker -->
+        <div class="pipeline-card">
+          <div class="pipeline-title">
+            <span>Perception & Reasoning State Machine</span>
+            <span id="pipeline-status" style="color: var(--primary-light); font-family: var(--font-mono);">IDLE / LISTENING</span>
+          </div>
+          <div class="pipeline-steps">
+            <div id="step-1" class="p-step">
+              <span class="p-step-num">01</span>
+              <span class="p-step-name">RapidOCR Perception</span>
+            </div>
+            <div id="step-2" class="p-step">
+              <span class="p-step-num">02</span>
+              <span class="p-step-name">Boundary Check</span>
+            </div>
+            <div id="step-3" class="p-step">
+              <span class="p-step-num">03</span>
+              <span class="p-step-name">SmolLM2 Reasoning</span>
+            </div>
+            <div id="step-4" class="p-step">
+              <span class="p-step-num">04</span>
+              <span class="p-step-name">ADB Shell Typing</span>
+            </div>
+            <div id="step-5" class="p-step">
+              <span class="p-step-num">05</span>
+              <span class="p-step-name">Keyboard Dismissal</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terminal Console -->
+        <div class="terminal-card">
+          <div class="term-top">
+            <div class="term-dots">
+              <span class="term-dot" style="background: #ef4444;"></span>
+              <span class="term-dot" style="background: #eab308;"></span>
+              <span class="term-dot" style="background: #22c55e;"></span>
+            </div>
+            <span class="term-title">adb-conversational-daemon.log [LIVE STREAM]</span>
+            <span style="font-size: 0.65rem; color: #64748b;">OPPO CPH1801 (Android 7.1.1)</span>
+          </div>
+          <div id="term-logs" class="term-logs">
+            <!-- Dynamic Telemetry Logs inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Architecture Grid -->
+  <section id="features" class="container features-section">
+    <div class="section-head">
+      <h2>Engineered for Physical Android Devices</h2>
+      <p>Zero emulators needed. Connects directly to hardware over USB debugging or Wi-Fi.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feat-icon">🛡️</div>
+        <h3>Safe Keyboard Guardrail</h3>
+        <p>Interrogates <code>dumpsys input_method</code> for <code>mInputShown=true</code> and sends safe <code>KEYCODE_BACK</code> dismissals to prevent UI occlusion or duplicate typing loops.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feat-icon">⚡</div>
+        <h3>RapidOCR Screen Parser</h3>
+        <p>Captures live display buffers via <code>exec-out screencap -p</code> and clusters text boxes with sub-second ONNX OCR, enabling instant perception without waiting on slow dumps.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feat-icon">🧠</div>
+        <h3>High-EQ Hinglish Reasoning</h3>
+        <p>Conversational engine with an anti-repetition topic state machine. Understands gaming slang (Clash Squad, MP40), hostel culture, and local Gujarati cues without circular prompts.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feat-icon">👥</div>
+        <h3>Zero Cross-Talk Multi-Target</h3>
+        <p>Manages concurrent, independent conversations with distinct contacts using strict identity verification to eliminate any accidental message leaks.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feat-icon">📴</div>
+        <h3>Offline Local Neural Brain</h3>
+        <p>Integrated with ultra-compact ~92MB quantized GGUF weights (<code>SmolLM2-135M</code>) via <code>llama-cpp-python</code>, providing completely private, offline dialogue analysis.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feat-icon">🎙️</div>
+        <h3>Multi-Speaker Speech Synthesis</h3>
+        <p>Generates multi-turn vocal conversations using <code>gTTS</code> and audio pitch/tempo modulation via <code>ffmpeg</code> for natural spoken dialogues.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLI Quickstart Banner -->
+  <section id="quickstart" class="container">
+    <div class="cli-banner">
+      <div class="cli-content">
+        <h3>Launch Autonomous Agent in Seconds</h3>
+        <p>Plug in your Android phone with USB Debugging enabled and run the unified CLI:</p>
+      </div>
+      <div class="cli-box">
+        <code>python run.py --mode autonomous --profile config/subjects/krupali_ni.json --turns 50</code>
+        <button id="copy-btn" class="copy-btn">Copy</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>Android Conversational Agent • MIT License • Built for pairing with Android Devices via ADB & scrcpy</p>
+    </div>
+  </footer>
+
+  <!-- Simulation Engine Script -->
+  <script>
+    const SIM_TURNS = [
+      {
+        incoming: "Gujarat se hi",
+        topic: "LOCATION_GUJARAT",
+        reply: "Arre sahi hai! Gujarat me konsi city se waise? Ahmedabad, Surat ya Vadodara? Aur CHARUSAT me hostel me rehti ho ya weekend pe ghar bhagti ho haha?",
+        turn: "6/50"
+      },
+      {
+        incoming: "Surat \n Weekend mai ghar not possible thoda durr hai toh travel karne mai hi aadha time chala jata hai",
+        topic: "HOMETOWN_SURAT",
+        reply: "Surat! Locho aur cold coco capital haha. Waise hostel mess me survive kaise kar rahi ho fir? Weekend pe seedha ghar bhagti ho kya?",
+        turn: "7/50"
+      },
+      {
+        incoming: "Locho pasand nhi but cold coco fav \n Aadat padh gai hai 11 se hi hostel mai hu So ho jata hai",
+        topic: "FOOD_HOSTEL_LIFE",
+        reply: "Hostel life ke bina college incomplete hai haha! Roommates kaisa treat karte hain? Maggi banata hai koi late night?",
+        turn: "8/50"
+      },
+      {
+        incoming: "Hann Maggie toh banti hai roommates bhi aache hai",
+        topic: "ROOMMATE_MAGGI",
+        reply: "Hann Maggi is official student fuel haha! Waise kettle me banati ho ya induction rakha hua hai chupke se?",
+        turn: "9/50"
+      },
+      {
+        incoming: "Hnn",
+        topic: "SHORT_AGREEMENT",
+        reply: "Waise abhi Free Fire ka match chal raha hai ya lobby me ho? Konsa mode khelte ho Clash Squad ya Battle Royale?",
+        turn: "10/50"
+      },
+      {
+        incoming: "Clash squad",
+        topic: "GAMING_CLASH_SQUAD",
+        reply: "Clash Squad me to short-range rush karne me hi maza hai! MP40 use karti ho ya shotgun?",
+        turn: "11/50"
+      },
+      {
+        incoming: "Shotgun",
+        topic: "WEAPONS_SHOTGUN",
+        reply: "Arre lethal choice haha! One-tap headshot lagte hain ya spray and pray chalta hai?",
+        turn: "12/50"
+      },
+      {
+        incoming: "Lagte hai haha",
+        topic: "CASUAL_BANTER",
+        reply: "Haha pro player vibes! Aadhi raat tak squad ke sath booyah nikalna is the best college feeling.",
+        turn: "13/50"
+      }
+    ];
+
+    let currentTurnIndex = 0;
+    let isPlaying = true;
+    let timer = null;
+
+    const chatStream = document.getElementById("chat-stream");
+    const termLogs = document.getElementById("term-logs");
+    const statTurns = document.getElementById("stat-turns");
+    const inputBox = document.getElementById("input-box");
+    const keyboardGuard = document.getElementById("keyboard-guard");
+    const pipelineStatus = document.getElementById("pipeline-status");
+
+    function log(tag, msg, tagClass) {
+      const now = new Date().toTimeString().split(' ')[0];
+      const div = document.createElement("div");
+      div.className = "log-line";
+      div.innerHTML = `<span class="log-time">${now}</span> <span class="log-tag ${tagClass}">[${tag}]</span> <span>${msg}</span>`;
+      termLogs.appendChild(div);
+      termLogs.scrollTop = termLogs.scrollHeight;
+    }
+
+    function setStep(stepNum) {
+      for (let i = 1; i <= 5; i++) {
+        const el = document.getElementById(`step-${i}`);
+        if (i === stepNum) el.classList.add("active");
+        else el.classList.remove("active");
+      }
+    }
+
+    function addMessageBubble(text, side) {
+      const bubble = document.createElement("div");
+      bubble.className = `bubble ${side}`;
+      const now = new Date().toTimeString().substring(0, 5);
+      bubble.innerHTML = `${text.replace(/\n/g, '<br>')} <div class="bubble-meta">${now} ✓✓</div>`;
+      chatStream.appendChild(bubble);
+      chatStream.scrollTop = chatStream.scrollHeight;
+    }
+
+    async function executeTurn() {
+      const data = SIM_TURNS[currentTurnIndex];
+      statTurns.innerText = data.turn;
+
+      // 1. Target sends message
+      pipelineStatus.innerText = "INCOMING MESSAGE DETECTED";
+      setStep(1);
+      log("OCR", `exec-out screencap -> RapidOCR parsed bounds in 28ms`, "tag-ocr");
+      addMessageBubble(data.incoming, "incoming");
+
+      // 2. Boundary Verification
+      await sleep(600);
+      setStep(2);
+      log("GUARD", `Boundary bounds x2=145 < 620 -> Verified INCOMING from Krupali Ni`, "tag-guard");
+
+      // 3. Neural Brain Reasoning
+      await sleep(700);
+      pipelineStatus.innerText = "SMOLLM2 REASONING & TOPIC GRAPH";
+      setStep(3);
+      log("AI", `Intent: [${data.topic}] -> Anti-repetition check passed -> Generated reply`, "tag-ai");
+
+      // 4. Typing into input dock
+      await sleep(600);
+      pipelineStatus.innerText = "ADB DISPATCH: TYPING & SENDING";
+      setStep(4);
+      inputBox.classList.add("typing");
+      inputBox.innerText = data.reply.substring(0, 24) + "...";
+      keyboardGuard.classList.add("active");
+      log("ADB", `adb shell input text "${data.reply.substring(0, 20)}..." -> Tap send (653, 719)`, "tag-adb");
+
+      // 5. Send message & Dismiss Keyboard
+      await sleep(900);
+      addMessageBubble(data.reply, "outgoing");
+      inputBox.classList.remove("typing");
+      inputBox.innerText = "Message";
+
+      setStep(5);
+      pipelineStatus.innerText = "KEYBOARD GUARD: DISMISSED";
+      log("GUARD", `dumpsys input_method: mInputShown=true -> Dispatched KEYCODE_BACK`, "tag-guard");
+      await sleep(500);
+      keyboardGuard.classList.remove("active");
+
+      pipelineStatus.innerText = "IDLE / WAITING FOR NEXT INCOMING";
+      currentTurnIndex = (currentTurnIndex + 1) % SIM_TURNS.length;
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function loop() {
+      if (!isPlaying) return;
+      await executeTurn();
+      if (isPlaying) {
+        timer = setTimeout(loop, 3600);
+      }
+    }
+
+    // Controls
+    document.getElementById("toggle-sim").addEventListener("click", function() {
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        this.innerText = "⏸ Pause Simulation";
+        this.classList.add("active");
+        loop();
+      } else {
+        this.innerText = "▶ Play Simulation";
+        this.classList.remove("active");
+        clearTimeout(timer);
+      }
+    });
+
+    document.getElementById("step-sim").addEventListener("click", async function() {
+      clearTimeout(timer);
+      isPlaying = false;
+      document.getElementById("toggle-sim").innerText = "▶ Play Simulation";
+      document.getElementById("toggle-sim").classList.remove("active");
+      await executeTurn();
+    });
+
+    document.getElementById("reset-sim").addEventListener("click", function() {
+      chatStream.innerHTML = "";
+      termLogs.innerHTML = "";
+      currentTurnIndex = 0;
+      log("SYS", "Simulator restarted. Listening on Android port 5037...", "tag-ai");
+      if (isPlaying) {
+        clearTimeout(timer);
+        loop();
+      }
+    });
+
+    document.getElementById("copy-btn").addEventListener("click", function() {
+      navigator.clipboard.writeText("python run.py --mode autonomous --profile config/subjects/krupali_ni.json --turns 50");
+      this.innerText = "Copied!";
+      setTimeout(() => this.innerText = "Copy", 2000);
+    });
+
+    // Initial setup
+    log("SYS", "Device attached: OPPO CPH1801 (dc3e96b9, Android 7.1.1)", "tag-adb");
+    log("SYS", "Safe Keyboard Guard initialized: Active", "tag-guard");
+    log("SYS", "SmolLM2-135M Neural Brain weights loaded (92MB Q4_K_M)", "tag-ai");
+    loop();
+  </script>
+</body>
+</html>

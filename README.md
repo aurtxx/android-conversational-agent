@@ -7,6 +7,9 @@
 [![ADB: Platform--Tools](https://img.shields.io/badge/adb-platform--tools-orange.svg)](https://developer.android.com/tools/adb)
 [![scrcpy](https://img.shields.io/badge/mirror-scrcpy-brightgreen.svg)](https://github.com/Genymobile/scrcpy)
 [![RapidOCR](https://img.shields.io/badge/OCR-RapidOCR-yellow.svg)](https://github.com/RapidAI/RapidOCR)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-SaaS_Preview-blueviolet.svg)](https://aurtxx.github.io/android-conversational-agent/)
+
+👉 **[Experience the Live Animated SaaS Preview](https://aurtxx.github.io/android-conversational-agent/)**
 
 ---
 
